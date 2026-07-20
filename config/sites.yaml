@@ -1,0 +1,15 @@
+sites:
+  - name: "test.cu"
+    port: 80
+    root: "/var/www/test"
+    content: "Тест, тест, тест!!!"
+
+  - name: "test2.cu"
+    port: 80
+    root: "/var/www/test2"
+    content: "Тест, тест, тест!!! 2"
+
+  - name: "test3.cu"
+    port: 80
+    root: "/var/www/test3"
+    content: "Тест, тест, тест!!! 3"

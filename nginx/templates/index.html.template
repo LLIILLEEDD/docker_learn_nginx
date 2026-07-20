@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>$name</title>
+</head>
+<body>
+    <h1>$name</h1>
+    <p>Домен: <strong>$name</strong> | Порт: <strong>$port</strong></p>
+    <p>$content</p>
+</body>
+</html>

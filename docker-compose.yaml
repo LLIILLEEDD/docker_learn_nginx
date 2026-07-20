@@ -1,0 +1,8 @@
+services:
+  web_server:
+    build: ./nginx
+    container_name: nginx_automated
+    ports:
+    - "80:80"
+    volumes:
+      - ./config:/app/config
