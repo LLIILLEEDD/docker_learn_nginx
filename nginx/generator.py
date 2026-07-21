@@ -34,6 +34,11 @@ def check_path():
         error_exit(f"{HTML_TEMPLATE} не найден")
     if not os.path.exists(NGINX_CONF_DIR):
         error_exit(f"{NGINX_CONF_DIR} не найден")
+    if not os.path.exists(HTML_PATH):
+            os.makedirs(
+        HTML_PATH,
+        exist_ok=True
+    )
 
 def check_valid(sites):
     for site in sites['sites']:
@@ -45,6 +50,10 @@ def check_valid(sites):
                 error_exit(
                     f"Пустое поле {field} в {CONFIG_PATH}"
                 )
+        if not site['root'].startswith("/var/www/"):
+            error_exit(
+                f"Поле root должно начинаться с /var/www/ в {CONFIG_PATH}: {site['root']}"
+            )
 
         
 def read_files():
@@ -143,6 +152,9 @@ def delete_unused_configs(sites):
         if file.endswith(".conf") and file != "default.conf"
     }
 
+    if existing_configs == needed_configs:
+        return
+
     unused_configs = existing_configs - needed_configs
 
     for file in unused_configs:
@@ -163,7 +175,9 @@ def delete_unused_html(sites):
         for directory in os.listdir(HTML_PATH)
         if os.path.isdir(os.path.join(HTML_PATH, directory))
         }
-
+    if existing_dirs == needed_dirs:
+        return 
+    
     unused_dirs = existing_dirs - needed_dirs
 
     for directory in unused_dirs:
