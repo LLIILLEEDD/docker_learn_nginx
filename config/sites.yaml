@@ -1,5 +1,6 @@
 sites:
   - name: "test.su"
     port: 80
-    root: "/vlar/www/test"
+    root: "/var/www/test"
     content: "Тест, тест, тест!!!"
+    
