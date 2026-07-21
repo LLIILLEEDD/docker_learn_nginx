@@ -4,21 +4,11 @@ import yaml
 import sys
 import shutil
 
-# для докера 
-
 CONFIG_PATH = "/app/config/sites.yaml"
 NGINX_TEMPLATE = "/etc/nginx/templates/nginx.conf.template"
 HTML_TEMPLATE = "/etc/nginx/templates/index.html.template"
 NGINX_CONF_DIR = "/etc/nginx/conf.d"
 HTML_PATH = "/var/www"
-
-# для тестов на себе
-
-# CONFIG_PATH = "../config/sites.yaml"
-# NGINX_TEMPLATE = "templates/nginx.conf.template"
-# HTML_TEMPLATE = "templates/index.html.template"
-# NGINX_CONF_DIR = "/etc/nginx/conf.d"
-# HTML_PATH = "/var/www"
 
 def error_exit(message):
     sys.stderr.write(f'Error: {message}\n')
