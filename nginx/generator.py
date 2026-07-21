@@ -2,18 +2,23 @@ import os
 from string import Template 
 import yaml
 import sys
+import shutil
 
 # для докера 
+
 CONFIG_PATH = "/app/config/sites.yaml"
 NGINX_TEMPLATE = "/etc/nginx/templates/nginx.conf.template"
 HTML_TEMPLATE = "/etc/nginx/templates/index.html.template"
 NGINX_CONF_DIR = "/etc/nginx/conf.d"
+HTML_PATH = "/var/www"
 
 # для тестов на себе
+
 # CONFIG_PATH = "../config/sites.yaml"
 # NGINX_TEMPLATE = "templates/nginx.conf.template"
 # HTML_TEMPLATE = "templates/index.html.template"
 # NGINX_CONF_DIR = "/etc/nginx/conf.d"
+# HTML_PATH = "/var/www"
 
 def error_exit(message):
     sys.stderr.write(f'Error: {message}\n')
@@ -54,7 +59,7 @@ def read_files():
     return sites_data, nginx_tmpl_obj, html_tmpl_obj
 
 
-def generate_files_nginx(sites, nginx_template, html_template, deleted_configs):
+def generate_files_nginx(sites, nginx_template, html_template):
     for site in sites['sites']:
         
         nginx_conf = nginx_template.safe_substitute( # юзаем safe_substitute чтобы не падать в ошибку от '$uri'
@@ -68,7 +73,6 @@ def generate_files_nginx(sites, nginx_template, html_template, deleted_configs):
         write_config(
             nginx_conf_path,
             nginx_conf,
-            deleted_configs
         )
 
         generate_html(
@@ -100,12 +104,11 @@ def generate_html(site, html_template):
     write_config(
         html_path,
         html_content,
-        []
     )
     print("=" * 50)
 
 
-def write_config(path, content, deleted_configs):
+def write_config(path, content):
     # Проверяем существование файла
     file_exists = os.path.exists(path)
 
@@ -142,17 +145,39 @@ def delete_unused_configs(sites):
 
     unused_configs = existing_configs - needed_configs
 
-    deleted_configs = []
+    # deleted_configs = []
 
     for file in unused_configs:
         path = os.path.join(NGINX_CONF_DIR, file)
         os.remove(path)
 
-        deleted_configs.append(file)
+        # deleted_configs.append(file)
 
         print(f"Удален: {path}")
+    
+    print("=" * 50)
+    print()
 
-    return deleted_configs
+
+def delete_unused_html(sites):
+    needed_dirs = {(site["root"]) for site in sites['sites']}
+    
+    existing_dirs = {
+        os.path.join(HTML_PATH, directory)
+        for directory in os.listdir(HTML_PATH)
+        if os.path.isdir(os.path.join(HTML_PATH, directory))
+        }
+
+    unused_dirs = existing_dirs - needed_dirs
+
+    for directory in unused_dirs:
+        shutil.rmtree(directory)
+
+        print(f"Удален: {directory}")
+    
+    print("=" * 50)
+    print()
+
 
 def main():
     check_path()
@@ -161,14 +186,15 @@ def main():
 
     check_valid(sites)
 
-    deleted_configs = delete_unused_configs(sites)
+    delete_unused_configs(sites) 
 
     generate_files_nginx(
         sites,
         nginx_template,
         html_template,
-        deleted_configs
     )
 
 
-main()
+# main()
+sites, nginx_template, html_template = read_files()
+delete_unused_html(sites)
