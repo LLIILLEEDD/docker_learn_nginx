@@ -145,13 +145,9 @@ def delete_unused_configs(sites):
 
     unused_configs = existing_configs - needed_configs
 
-    # deleted_configs = []
-
     for file in unused_configs:
         path = os.path.join(NGINX_CONF_DIR, file)
         os.remove(path)
-
-        # deleted_configs.append(file)
 
         print(f"Удален: {path}")
     
@@ -186,7 +182,8 @@ def main():
 
     check_valid(sites)
 
-    delete_unused_configs(sites) 
+    delete_unused_configs(sites)
+    delete_unused_html(sites)
 
     generate_files_nginx(
         sites,
@@ -195,6 +192,4 @@ def main():
     )
 
 
-# main()
-sites, nginx_template, html_template = read_files()
-delete_unused_html(sites)
+main()
