@@ -119,11 +119,8 @@ def write_config(path, content):
             print(f"Без изменений: {path}")
             return
 
-
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-
-    filename = os.path.basename(path)
 
     if file_exists:
         print(f"Обновлен: {path}")
